@@ -1,0 +1,1 @@
+.. |casadi| replace:: ``CasADi``
