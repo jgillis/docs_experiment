@@ -3,3 +3,4 @@
 conda create -n casadi_docs python
 source activate casadi_docs
 pip install -r requirements.txt
+make singlehtml

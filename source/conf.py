@@ -42,7 +42,6 @@ extensions = [
     'sphinx.ext.autodoc',
     'sphinx.ext.mathjax',
     'sphinx.ext.ifconfig',
-    'sphinxcontrib.examplecode',
     'sidebyside',
     'exec-block',
     'sphinx.ext.autosectionlabel', 
