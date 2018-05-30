@@ -94,7 +94,7 @@ The following list summarizes the most commonly used ways of constructing new |S
 
 * ``SX.sym(name,n,m)``: Create an :math:`n`-by-:math:`m` symbolic primitive
 * ``SX.zeros(n,m)``: Create an :math:`n`-by-:math:`m` dense matrix with all zeros
-* ``SX(n,m)``: Create an :math:`n`-by-:math:`m` sparse matrix with all \emph{structural} zeros
+* ``SX(n,m)``: Create an :math:`n`-by-:math:`m` sparse matrix with all *structural* zeros
 * ``SX.ones(n,m)``: Create an :math:`n`-by-:math:`m` dense matrix with all ones
 * ``SX.eye(n)``: Create an :math:`n`-by-:math:`n` diagonal matrix with ones on the diagonal and structural zeros elsewhere.
 * ``SX(scalar_type)``: Create a scalar (1-by-1 matrix) with value given by the argument. This method can be used explicitly, e.g. ``SX(9)``, or implicitly, e.g. ``9 * SX.ones(2,2)``.
@@ -260,3 +260,487 @@ Mixing |SX| and |MX|
 --------------------
 You can *not* multiply an |SX| object with an |MX| object, or perform any other operation to mix the two in the same expression graph. You can, however, in an |MX| graph include calls to a |Function| defined by |SX| expressions. This will be demonstrated in :numref:`Chapter %s <sec-function>`. Mixing |SX| and |MX| is often a good idea since functions defined by |SX| expressions have a much lower overhead per operation making it much faster for operations that are naturally written as a sequence of scalar operations. The |SX| expressions are thus intended to be used for low level operations (for example the DAE right hand side in :numref:`sec-integrator`), whereas the |MX| expressions act as a glue and enables the formulation of e.g. the constraint function of an NLP (which might contain calls to ODE/DAE integrators, or might simply be too large to expand as one big expression).
 
+
+.. _sec-sparsity_class:
+
+The |Sparsity| class
+--------------------
+As mentioned above, matrices in |casadi| are stored using the *compressed column storage* (CCS) format. This is a standard format for sparse matrices that allows linear algebra operations such as element-wise operations, matrix multiplication and transposes to be performed efficiently. In the CCS format, the sparsity pattern is decoded using the dimensions -- the number of rows and number of columns -- and two vectors. The first vector contains the index of the first structurally nonzero element of each column and the second vector contains the row index for every nonzero element. For more details on the CCS format, see e.g.  `Templates for the Solution of Linear Systems <http://netlib.org/linalg/html_templates/node92.html>`_ on Netlib. Note that |casadi| uses the CCS format for sparse as well as dense matrices.
+
+Sparsity patterns in |casadi| are stored as instances of the |Sparsity| class, which is *reference-counted*, meaning that multiple matrices can share the same sparsity pattern, including |MX| expression graphs and instances of |SX| and |DM|. The |Sparsity| class is also *cached*, meaning that the creation of multiple instances of the same sparsity patterns is always avoided.
+
+The following list summarizes the most commonly used ways of constructing new sparsity patterns:
+
+* ``Sparsity.dense(n,m)``: Create a dense :math:`n`-by-:math:`m` sparsity pattern
+* ``Sparsity(n,m)``: Create a sparse :math:`n`-by-:math:`m` sparsity pattern
+* ``Sparsity.diag(n)``: Create a diagonal :math:`n`-by-:math:`n` sparsity pattern
+* ``Sparsity.upper(n)``: Create an upper triangular :math:`n`-by-:math:`n` sparsity pattern
+* ``Sparsity.lower(n)``: Create a lower triangular :math:`n`-by-:math:`n` sparsity pattern
+
+The |Sparsity| class can be used to create non-standard matrices, e.g.
+
+.. side-by-side::
+    .. exec-block:: python
+
+        print(SX.sym('x',Sparsity.lower(3)))
+
+    &&
+
+    .. exec-block:: octave
+
+        disp(SX.sym('x',Sparsity.lower(3)))
+
+Getting and setting elements in matrices
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+To get or set an element or a set of elements in |casadi|'s matrix types (|SX|, |MX| and |DM|), we use square brackets in Python and round brackets in C++ and MATLAB. As is conventional in these languages, indexing starts from zero in C++ and Python but from one in MATLAB. In Python and C++, we allow negative indices to specify an index counted from the end. In MATLAB, use the ``end`` keyword for indexing from the end.
+
+Indexing can be done with one index or two indices. With two indices, you reference a particular row (or set or rows) and a particular column (or set of columns). With one index, you reference an element (or set of elements) starting from the upper left corner and column-wise to the lower right corner. All elements are counted regardless of whether they are structurally zero or not.
+
+.. side-by-side::
+    .. exec-block:: python
+
+      M = SX([[3,7],[4,5]])
+      print(M[0,:])
+      M[0,:] = 1
+      print(M)
+
+    &&
+
+    .. exec-block:: octave
+
+      M = SX([3,7;4,5]);
+      disp(M(1,:))
+      M(1,:) = 1;
+      disp(M)
+
+
+Unlike Python's NumPy, |casadi| slices are not views into the data of the left hand side; rather, a slice access copies the data. As a result, the matrix :math:`m` is not changed at all in the following example:
+
+.. exec-block:: python
+
+    M = SX([[3,7],[4,5]])
+    M[0,:][0,0] = 1
+    print(M)
+
+The getting and setting matrix elements is elaborated in the following. The discussion applies to all of |casadi|'s matrix types.
+
+**Single element access** is getting or setting by providing a row-column pair or its flattened index (column-wise starting in the upper left corner of the matrix):
+
+.. side-by-side::
+    .. exec-block:: python
+
+        M = diag(SX([3,4,5,6]))
+        print(M)
+
+    &&
+
+    .. exec-block:: octave
+
+        M = diag(SX([3,4,5,6]));
+        disp(M)
+
+.. side-by-side::
+    .. exec-block:: python
+        
+        M = diag(SX([3,4,5,6])) [hidden]
+        print(M[0,0], M[1,0], M[-1,-1])
+    &&
+
+    .. exec-block:: octave
+
+        M = diag(SX([3,4,5,6])); [hidden]
+        M(1,1), M(2,1), M(end,end)
+
+**Slice access** means setting multiple elements at once. This is significantly more efficient than setting the elements one at a time. You get or set a slice by providing a (*start*,*stop*,*step*) triple. In Python and MATLAB, |casadi| uses standard syntax:
+
+
+.. side-by-side::
+    .. exec-block:: python
+        
+        M = diag(SX([3,4,5,6])) [hidden]
+        print(M[:,1])
+        print(M[1:,1:4:2])
+    &&
+
+    .. exec-block:: octave
+
+        M = diag(SX([3,4,5,6])); [hidden]
+        disp(M(:,2))
+        disp(M(2:end,2:2:4))
+
+
+In C++, |casadi|'s :class:`Slice` helper class can be used. For the example above, this means ``M(Slice(),1)`` and ``M(Slice(1,-1),Slice(1,4,2))``, respectively.
+
+**List access** is similar to (but potentially less efficient than) slice access:
+
+.. side-by-side::
+    .. exec-block:: python
+                
+        M = SX([[3,7,8,9],[4,5,6,1]])
+        print(M)
+        print(M[0,[0,3]], M[[5,-6]])
+    &&
+
+    .. exec-block:: octave
+
+        M = SX([3 7 8 9; 4 5 6 1]);
+        disp(M)
+        M(1,[1,4]), M([6,numel(M)-5])
+
+
+
+
+Arithmetic operations
+---------------------
+
+|casadi| supports most standard arithmetic operations such as addition, multiplications, powers, trigonometric functions etc:
+
+.. side-by-side::
+    .. exec-block:: python
+                
+        x = SX.sym('x')
+        y = SX.sym('y',2,2)
+        print(sin(y)-x)
+    &&
+
+    .. exec-block:: octave
+
+        x = SX.sym('x');
+        y = SX.sym('y',2,2);
+        sin(y)-x
+
+In C++ and Python (but not in MATLAB), the standard multiplication operation (using ``*``) is reserved for element-wise multiplication (in MATLAB ``.*``). For **matrix multiplication**, use ``A @ B`` or (``mtimes(A,B)`` in Python 3.4+):
+
+.. side-by-side::
+    .. exec-block:: python
+                
+        y = SX.sym('y',2,2); [hidden]
+        print(y*y, y@y)
+    &&
+
+    .. exec-block:: octave
+
+        y = SX.sym('y',2,2); [hidden]
+        y.*y, y*y
+
+As is customary in MATLAB, multiplication using ``*`` and ``.*`` are equivalent when either of the arguments is a scalar.
+
+**Transposes** are formed using the syntax ``A.T`` in Python, ``A.T()`` in C++ and with
+``A`` or ``A.'`` in MATLAB:
+
+.. side-by-side::
+    .. exec-block:: python
+                
+        y = SX.sym('y',2,2); [hidden]
+        print(y.T)
+    &&
+
+    .. exec-block:: octave
+
+        y = SX.sym('y',2,2); [hidden]
+        y'
+
+**Reshaping** means changing the number of rows and columns but retaining the number of elements and the relative location of the nonzeros. This is a computationally very cheap operation which is performed using the syntax:
+
+.. side-by-side::
+    .. exec-block:: python
+                
+        x = SX.eye(4)
+        print(reshape(x,2,8))
+    &&
+
+    .. exec-block:: octave
+
+        x = SX.eye(4);
+        reshape(x,2,8)
+
+**Concatenation** means stacking matrices horizontally or vertically. Due to the column-major way of storing elements in |casadi|, it is most efficient to stack matrices horizontally. Matrices that are in fact column vectors (i.e. consisting of a single column), can also be stacked efficiently vertically. Vertical and horizontal concatenation is performed using the functions ``vertcat`` and ``horzcat`` (that take a variable amount of input arguments) in Python and C++ and with square brackets in MATLAB:
+
+
+.. side-by-side::
+    .. exec-block:: python
+                
+        x = SX.sym('x',5)
+        y = SX.sym('y',5)
+        print(vertcat(x,y))
+    &&
+
+    .. exec-block:: octave
+
+        x = SX.sym('x',5);
+        y = SX.sym('y',5);
+        [x;y]
+
+
+
+.. side-by-side::
+    .. exec-block:: python
+                
+        x = SX.sym('x',5) [hidden]
+        y = SX.sym('y',5) [hidden]
+        print(horzcat(x,y))
+    &&
+
+    .. exec-block:: octave
+
+        x = SX.sym('x',5); [hidden]
+        y = SX.sym('y',5); [hidden]
+        [x,y]
+
+There are also variants of these functions that take a list (in Python) or a cell array (in Matlab) as inputs:
+
+
+.. side-by-side::
+    .. exec-block:: python
+         
+        x = SX.sym('x',5) [hidden]
+        y = SX.sym('y',5) [hidden]       
+        L = [x,y]
+        print(hcat(L))
+    &&
+
+    .. exec-block:: octave
+
+        x = SX.sym('x',5); [hidden]
+        y = SX.sym('y',5); [hidden]
+        L = {x,y};
+        hcat(L) % equivalent to [L{:}]
+
+**Horizontal and vertical split** are the inverse operations of the above introduced horizontal and vertical concatenation. To split up an expression horizontally into :math:`n` smaller expressions, you need to provide, in addition to the expression being split, a vector *offset* of length :math:`n+1`. The first element of the *offset* vector must be 0 and the last element must be the number of columns. Remaining elements must follow in a non-decreasing order. The output :math:`i` of the split operation then contains the columns :math:`c` with :math:`\textit{offset}[i] \le c < \textit{offset}[i+1]`. The following demonstrates the syntax:
+
+.. side-by-side::
+    .. exec-block:: python
+         
+        x = SX.sym('x',5,2)
+        w = horzsplit(x,[0,1,2])
+        print(w[0], w[1])
+    &&
+
+    .. exec-block:: octave
+
+        x = SX.sym('x',5,2)
+        w = horzsplit(x,[0,1,2])
+        print(w[0], w[1])
+
+The vertsplit operation works analogously, but with the *offset* vector referring to rows:
+
+.. side-by-side::
+    .. exec-block:: python
+
+        x = SX.sym('x',5,2) [hidden]
+        w = vertsplit(x,[0,3,5])
+        print(w[0], w[1])
+    &&
+
+    .. exec-block:: octave
+
+        x = SX.sym('x',5,2) [hidden]
+        w = vertsplit(x,[0,3,5]);
+        w{1}, w{2}
+
+Note that it is always possible to use slice element access instead of horizontal and vertical split, for the above vertical split:
+
+.. side-by-side::
+    .. exec-block:: python
+
+        w = [x[0:3,:], x[3:5,:]]
+        print(w[0], w[1])
+    &&
+
+    .. exec-block:: octave
+
+        w = {x(1:3,:), x(4:5,:)};
+        w{1}, w{2}
+
+For |SX| graphs, this alternative way is completely equivalent, but for |MX| graphs using ``horzsplit``/``vertsplit`` is *significantly more efficient when all the split expressions are needed*.
+
+**Inner product**, defined as :math:`<A,B> := \text{tr}(A \, B) = \sum_{i,j} \, A_{i,j} \, B_{i,j}` are created as follows:
+
+.. side-by-side::
+    .. exec-block:: python
+
+        x = SX.sym('x',2,2)
+        print(dot(x,x))
+    &&
+
+    .. exec-block:: octave
+
+        x = SX.sym('x',2,2)
+        dot(x,x)
+
+Many of the above operations are also defined for the |Sparsity| class (:numref:`sec-sparsity_class`), e.g. ``vertcat``, ``horzsplit``, transposing, addition (which returns the *union* of two sparsity patterns) and multiplication (which returns the *intersection* of two sparsity patterns).
+
+TODO link to API
+
+Querying properties
+-------------------
+
+You can check if a matrix or sparsity pattern has a certain property by calling an appropriate member function. e.g.
+
+.. side-by-side::
+    .. exec-block:: python
+
+        y = SX.sym('y',10,1)
+        print(y.shape)
+    &&
+
+    .. exec-block:: octave
+
+        y = SX.sym('y',10,1);
+        size(y)
+
+Note that in MATLAB, ``obj.myfcn(arg)`` and ``myfcn(obj, arg)`` are both valid ways of calling a member function ``myfcn``. The latter variant is probably preferable from a style viewpoint.
+
+Some commonly used properties for a matrix ``A`` are:
+
+  * ``A.size1()`` The number of rows
+  * ``A.size2()`` The number of columns
+  * ``A.shape`` (in MATLAB "size") The shape, i.e. the pair (*nrow*,*ncol*)
+  * ``A.numel()`` The number of elements, i.e :math:`\textit{nrow} * \textit{ncol}`
+  * ``A.nnz()`` The number of structurally nonzero elements, equal to ``A.numel()`` if *dense*.
+  * ``A.sparsity()`` Retrieve a reference to the sparsity pattern
+  * ``A.is_dense()`` Is a matrix dense, i.e. having no structural zeros
+  * ``A.is_scalar()`` Is the matrix a scalar, i.e. having dimensions 1-by-1?
+  * ``A.is_column()`` Is the matrix a vector, i.e. having dimensions :math:`n`-by-1?
+  * ``A.is_square()`` Is the matrix square?
+  * ``A.is_triu()`` Is the matrix upper triangular?
+  * ``A.is_constant()`` Are the matrix entries all constant?
+  * ``A.is_integer()`` Are the matrix entries all integer-valued?
+
+The last queries are examples of queries for which *false negative* returns are allowed. A matrix for which ``A.is_constant()`` is *true* is guaranteed to be constant, but is *not* guaranteed to be non-constant if ``A.is_constant()`` is *false*. We recommend you to check the API documentation for a particular function before using it for the first time.
+
+
+Linear algebra
+--------------
+|casadi| supports a limited number of linear algebra operations, e.g. for solution of linear systems of equations:
+
+.. side-by-side::
+    .. exec-block:: python
+
+        A = MX.sym('A',3,3)
+        b = MX.sym('b',3)
+        print(solve(A,b))
+    &&
+
+    .. exec-block:: octave
+
+        A = MX.sym('A',3,3);
+        b = MX.sym('b',3);
+        A\b
+
+
+
+Calculus -- algorithmic differentiation
+---------------------------------------
+
+The single most central functionality of |casadi| is *algorithmic (or automatic) differentiation* (AD).
+For a function :math:`f: \mathbb{R}^N \rightarrow \mathbb{R}^M`:
+
+.. math::
+
+    y = f(x),
+
+
+*forward mode* directional derivatives can be used to calculate Jacobian-times-vector products:
+
+.. math::
+
+    \hat{y} = \frac{\partial f}{\partial x} \, \hat{x}.
+
+
+Similarly, *reverse mode* directional derivatives can be used to calculate Jacobian-transposed-times-vector products:
+
+.. math::
+
+    \bar{x} = \left(\frac{\partial f}{\partial x}\right)^{\text{T}} \, \bar{y}.
+
+
+Both forward and reverse mode directional derivatives are calculated at a cost proportional to evaluating :math:`f(x)`, *regardless of the dimension* of :math:`x`.
+
+CasADi is also able to generate complete, *sparse* Jacobians efficiently. The algorithm for this is very complex, but essentially consists of the following steps:
+
+* Automatically detect the sparsity pattern of the Jacobian
+* Use graph coloring techniques to find a few forward and/or directional derivatives needed to construct the complete Jacobian
+* Calculate the directional derivatives numerically or symbolically
+* Assemble the complete Jacobian
+
+
+Hessians are calculated by first calculating the gradient and then performing the same steps as above to calculate the Jacobian of the gradient in the same way as above, while exploiting symmetry.
+
+Syntax
+^^^^^^
+An expression for a Jacobian is obtained using the syntax:
+
+.. side-by-side::
+    .. exec-block:: python
+
+        A = SX.sym('A',3,2)
+        x = SX.sym('x',2)
+        print(jacobian(A@x,x))
+    &&
+
+    .. exec-block:: octave
+
+        A = SX.sym('A',3,2);
+        x = SX.sym('x',2);
+        jacobian(A*x,x)
+
+When the differentiated expression is a scalar, you can also calculate the gradient in the matrix sense:
+
+.. side-by-side::
+    .. exec-block:: python
+
+        print(gradient(dot(A,A),A))
+    &&
+
+    .. exec-block:: octave
+
+        gradient(dot(A,A),A)
+
+Note that, unlike ``jacobian``, ``gradient`` always returns a dense vector.
+
+Hessians, and as a by-product gradients, are obtained as follows:
+
+.. side-by-side::
+    .. exec-block:: python
+
+        [H,g] = hessian(dot(x,x),x)
+        print('H:', H)
+    &&
+
+    .. exec-block:: octave
+
+        [H,g] = hessian(dot(x,x),x);
+        display(H)
+
+For calculating a Jacobian-times-vector product, the ``jtimes`` function -- performing forward mode AD -- is often more efficient than creating the full Jacobian and performing a matrix-vector multiplication:
+
+.. side-by-side::
+    .. exec-block:: python
+
+        v = SX.sym('v',2)
+        f = mtimes(A,x)
+        print(jtimes(f,x,v))
+    &&
+
+    .. exec-block:: octave
+
+        v = SX.sym('v',2);
+        f = A*x;
+        jtimes(f,x,v)
+
+The ``jtimes`` function optionally calculates the transposed-Jacobian-times-vector product, i.e. reverse mode AD:
+
+.. side-by-side::
+    .. exec-block:: python
+
+        w = SX.sym('w',3)
+        f = mtimes(A,x)
+        print(jtimes(f,x,w,True))
+    &&
+
+    .. exec-block:: octave
+
+        w = SX.sym('w',3);
+        f = A*x
+        jtimes(f,x,w,true)
