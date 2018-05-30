@@ -1,2 +1,4 @@
 Opti
 ====
+
+.. include:: defs.rst

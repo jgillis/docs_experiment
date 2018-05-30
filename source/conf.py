@@ -44,8 +44,15 @@ extensions = [
     'sphinx.ext.ifconfig',
     'sphinxcontrib.examplecode',
     'sidebyside',
+    'exec-block',
+    'sphinx.ext.autosectionlabel', 
     #'sphinxcontrib.osexample',
 ]
+
+
+numfig = True
+numfig_secnum_depth = (2)
+numfig_format = {'figure': 'Figure %s', 'table': 'Table %s', 'code-block': 'Code Block %s', 'section': 'Section %s'}
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']

@@ -1,0 +1,5 @@
+git+git://github.com/jgillis/side-by-side@master#egg=sidebyside
+git+git://github.com/jgillis/exec-block@master#egg=exec-block
+sphinx
+recommonmark
+

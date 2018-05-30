@@ -16,6 +16,7 @@ Welcome to CasADi's documentation!
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
+   :numbered:
 
    intro
    install
