@@ -153,6 +153,8 @@ described in the previous section, we can then create a |Function|
 .. side-by-side::
     .. exec-block:: python
 
+        from os import system [hidden]
+
         x = MX.sym('x') [hidden]
         f = Function('f',[x],[sin(x)]) [hidden]
         f.generate('gen.c') [hidden]

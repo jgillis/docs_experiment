@@ -24,30 +24,32 @@ The |SX| data type is used to represent matrices whose elements consist of symbo
 Now create a variable ``x`` using the syntax:
 
 .. side-by-side::
-    .. code-block:: python
+    .. exec-block:: python
 
         x = MX.sym("x")
+        print(x) [hidden]
 
     &&
 
-    .. code-block:: octave
+    .. exec-block:: octave
 
-        x = MX.sym('x');
+        x = MX.sym('x')
 
 This creates a 1-by-1 matrix, i.e. a scalar containing a symbolic primitive called ``x``. This is just the display name, not the identifier. Multiple variables can have the same name, but still be different. The identifier is the return value. You can also create vector- or matrix-valued symbolic variables by supplying additional arguments to ``SX.sym``:
 
 .. side-by-side::
-    .. code-block:: python
+    .. exec-block:: python
 
         y = SX.sym('y',5)
         Z = SX.sym('Z',4,2)
+        print(y,Z) [hidden]
 
     &&
 
-    .. code-block:: octave
+    .. exec-block:: octave
 
-        y = SX.sym('y',5);
-        Z = SX.sym('Z',4,2);
+        y = SX.sym('y',5)
+        Z = SX.sym('Z',4,2)
 
 
 which creates a 5-by-1 matrix, i.e. a vector, and a 4-by-2 matrix with symbolic primitives, respectively.
@@ -534,7 +536,7 @@ The vertsplit operation works analogously, but with the *offset* vector referrin
 
     .. exec-block:: octave
 
-        x = SX.sym('x',5,2) [hidden]
+        x = SX.sym('x',5,2); [hidden]
         w = vertsplit(x,[0,3,5]);
         w{1}, w{2}
 
@@ -543,12 +545,14 @@ Note that it is always possible to use slice element access instead of horizonta
 .. side-by-side::
     .. exec-block:: python
 
+        x = SX.sym('x',5,2) [hidden]
         w = [x[0:3,:], x[3:5,:]]
         print(w[0], w[1])
     &&
 
     .. exec-block:: octave
 
+        x = SX.sym('x',5,2); [hidden]
         w = {x(1:3,:), x(4:5,:)};
         w{1}, w{2}
 
@@ -690,10 +694,14 @@ When the differentiated expression is a scalar, you can also calculate the gradi
 .. side-by-side::
     .. exec-block:: python
 
+        A = SX.sym('A',3,2) [hidden]
+
         print(gradient(dot(A,A),A))
     &&
 
     .. exec-block:: octave
+
+        A = SX.sym('A',3,2); [hidden]
 
         gradient(dot(A,A),A)
 
@@ -704,11 +712,14 @@ Hessians, and as a by-product gradients, are obtained as follows:
 .. side-by-side::
     .. exec-block:: python
 
+        x = SX.sym('x',2) [hidden]
         [H,g] = hessian(dot(x,x),x)
         print('H:', H)
     &&
 
     .. exec-block:: octave
+
+        x = SX.sym('x',2); [hidden]
 
         [H,g] = hessian(dot(x,x),x);
         display(H)
@@ -718,6 +729,8 @@ For calculating a Jacobian-times-vector product, the ``jtimes`` function -- perf
 .. side-by-side::
     .. exec-block:: python
 
+        A = DM([[1,3],[4,7],[2,8]])
+        x = SX.sym('x',2)
         v = SX.sym('v',2)
         f = mtimes(A,x)
         print(jtimes(f,x,v))
@@ -725,6 +738,8 @@ For calculating a Jacobian-times-vector product, the ``jtimes`` function -- perf
 
     .. exec-block:: octave
 
+        A = [1 3;4 7;2 8];
+        x = SX.sym('x',2);
         v = SX.sym('v',2);
         f = A*x;
         jtimes(f,x,v)
@@ -734,6 +749,8 @@ The ``jtimes`` function optionally calculates the transposed-Jacobian-times-vect
 .. side-by-side::
     .. exec-block:: python
 
+        A = DM([[1,3],[4,7],[2,8]]) [hidden]
+        x = SX.sym('x',2) [hidden]
         w = SX.sym('w',3)
         f = mtimes(A,x)
         print(jtimes(f,x,w,True))
@@ -741,6 +758,8 @@ The ``jtimes`` function optionally calculates the transposed-Jacobian-times-vect
 
     .. exec-block:: octave
 
+        A = [1 3;4 7;2 8]; [hidden]
+        x = SX.sym('x',2); [hidden]
         w = SX.sym('w',3);
         f = A*x
         jtimes(f,x,w,true)

@@ -463,6 +463,10 @@ In two dimensions, we get the following in Python, also compared to SciPy for re
 
 .. exec-block:: python
 
+    import casadi as ca [hidden]
+    import numpy as np [hidden]
+    import scipy.interpolate as ip [hidden]
+
     xgrid = np.linspace(-5,5,11)
     ygrid = np.linspace(-4,4,9)
     X,Y = np.meshgrid(xgrid,ygrid,indexing='ij')
@@ -472,6 +476,7 @@ In two dimensions, we get the following in Python, also compared to SciPy for re
     lut = ca.interpolant('name','bspline',[xgrid,ygrid],data_flat)
     print(lut([0.5,1]))
     # Using Scipy
+
     interp = ip.RectBivariateSpline(xgrid, ygrid, data)
     print(interp.ev(0.5,1))
 
@@ -506,6 +511,8 @@ to ``True``/``true``:
 
 .. side-by-side::
     .. exec-block:: python
+
+        from os import system [hidden]
 
         x = MX.sym('x') [hidden]
         f = Function('f',[x],[sin(x)]) [hidden]

@@ -131,6 +131,8 @@ as follows.
 
 .. side-by-side::
     .. exec-block:: python
+        
+        g = 9.81 [hidden]
 
         dae = DaeBuilder()
         # Add input expressions
@@ -159,6 +161,8 @@ as follows.
     &&
 
     .. exec-block:: octave
+
+        g = 9.81; [hidden]
 
         dae = DaeBuilder;
         % Add input expressions
@@ -214,7 +218,7 @@ To see how to use the Modelica import, look at `thermodynamics_example.py <https
 
 Assuming that the Modelica/Optimica model ``ModelicaClass.ModelicaModel`` is defined in the files ``file1.mo`` and ``file2.mop``, the Python compile command is:
 
-.. exec-block:: python
+.. code-block:: python
 
     from pymodelica import compile_jmu
     jmu_name=compile_jmu('ModelicaClass.ModelicaModel', \
@@ -223,7 +227,7 @@ Assuming that the Modelica/Optimica model ``ModelicaClass.ModelicaModel`` is def
 
 This will generate a ``jmu``-file, which is essentially a zip file containing, among other things, the file ``modelDescription.xml``. This XML-file contains a symbolic representation of the optimal control problem and can be inspected in a standard XML editor.
 
-.. exec-block:: python
+.. code-block:: python
 
     from zipfile import ZipFile
     sfile = ZipFile(jmu_name','r')
@@ -232,7 +236,7 @@ This will generate a ``jmu``-file, which is essentially a zip file containing, a
 Once a ``modelDescription.xml`` file is available, it can be imported
 using the ``parse_fmi`` command:
 
-.. exec-block:: python
+.. code-block:: python
 
     dae = DaeBuilder()
     ocp.parse_fmi('modelDescription.xml')
@@ -248,13 +252,13 @@ DAE that can be used more readily in optimal control algorithms.
 This can be done by the \python{make_implicit} command:
 
 .. side-by-side::
-    .. exec-block:: python
+    .. code-block:: python
 
         ocp.make_explicit()
 
     &&
 
-    .. exec-block:: octave
+    .. code-block:: octave
 
         ocp.make_explicit();
 

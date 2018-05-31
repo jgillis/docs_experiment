@@ -213,20 +213,26 @@ The syntax for this, assuming :math:`n=m=1` for simplicity, is:
 .. side-by-side::
     .. exec-block:: python
 
+        nz = 1 [hidden]
+        nx = 1 [hidden]
+
         z = SX.sym('x',nz)
         x = SX.sym('x',nx)
-        g0 = (an expression of x, z)
-        g1 = (an expression of x, z)
+        g0 = sin(x+z)
+        g1 = cos(x-z)
         g = Function('g',[z,x],[g0,g1])
         G = rootfinder('G','newton',g)
     &&
 
     .. exec-block:: octave
 
+        nz = 1; [hidden]
+        nx = 1; [hidden]
+
         z = SX.sym('x',nz);
         x = SX.sym('x',nx);
-        g0 = (an expression of x, z)
-        g1 = (an expression of x, z)
+        g0 = sin(x+z);
+        g1 = cos(x-z);
         g = Function('g',{z,x},{g0,g1});
         G = rootfinder('G','newton',g);
 
@@ -294,11 +300,19 @@ be done by evaluating the created function object:
 .. side-by-side::
     .. exec-block:: python
 
+        x = SX.sym('x'); z = SX.sym('z'); p = SX.sym('p') [hidden]
+        dae = {'x':x, 'z':z, 'p':p, 'ode':z+p, 'alg':z*cos(z)-x} [hidden]
+        F = integrator('F', 'idas', dae) [hidden]
+
         r = F(x0=0, z0=0, p=0.1)
         print(r['xf'])
     &&
 
     .. exec-block:: octave
+
+        x = SX.sym('x'); z = SX.sym('z'); p = SX.sym('p'); [hidden]
+        dae = struct('x',x,'z',z,'p',p,'ode',z+p,'alg',z*cos(z)-x); [hidden]
+        F = integrator('F', 'idas', dae); [hidden]
 
         r = F('x0',0,'z0',0,'p',0.1);
         disp(r.xf)
@@ -557,6 +571,11 @@ Since we used |casadi|'s |DM|-type above, we can simply query the sparsity patte
 .. side-by-side::
     .. exec-block:: python
 
+        H = 2*DM.eye(2) [hidden]
+        A = DM.ones(1,2) [hidden]
+        g = DM.zeros(2) [hidden]
+        lba = 10. [hidden]
+
         qp = {}
         qp['h'] = H.sparsity()
         qp['a'] = A.sparsity()
@@ -564,6 +583,11 @@ Since we used |casadi|'s |DM|-type above, we can simply query the sparsity patte
 
 
     .. exec-block:: octave
+
+        H = 2*DM.eye(2); [hidden]
+        A = DM.ones(1,2); [hidden]
+        g = DM.zeros(2); [hidden]
+        lba = 10; [hidden]
 
         qp = struct;
         qp.h = H.sparsity();
@@ -631,8 +655,8 @@ Suppose you are interested in computing a function :math:`f : \mathbb{R}^{n} \ri
 
         x = SX.sym("x") [hidden]
         f = Function("f",[x],[sin(x)]) [hidden]
-
         X = MX.sym("X",1,8) [hidden]
+        N = 4 [hidden]
 
         ys = []
         for i in range(N):
@@ -648,6 +672,7 @@ Suppose you are interested in computing a function :math:`f : \mathbb{R}^{n} \ri
         x = SX.sym('x'); [hidden]
         f = Function('f',{x},{sin(x)}); [hidden]
         X = MX.sym('X',1,8); [hidden]
+        N = 4; [hidden]
 
         ys = {};
         for i=1:N
@@ -663,8 +688,8 @@ The aggregate function :math:`F : \mathbb{R}^{n \times N} \rightarrow \mathbb{R}
 
         x = SX.sym("x") [hidden]
         f = Function("f",[x],[sin(x)]) [hidden]
+        N = 4 [hidden]
 
-        X = MX.sym("X",1,8) [hidden]
 
         F = f.map(N)
 
@@ -674,7 +699,7 @@ The aggregate function :math:`F : \mathbb{R}^{n \times N} \rightarrow \mathbb{R}
 
         x = SX.sym('x'); [hidden]
         f = Function('f',{x},{sin(x)}); [hidden]
-        X = MX.sym('X',1,8); [hidden]
+        N = 4; [hidden]
 
         F = f.map(N);
 
@@ -685,6 +710,7 @@ The aggregate function :math:`F : \mathbb{R}^{n \times N} \rightarrow \mathbb{R}
 
         x = SX.sym("x") [hidden]
         f = Function("f",[x],[sin(x)]) [hidden]
+        N = 4 [hidden]
 
         F = f.map(N,"thread",4)
 
@@ -694,6 +720,7 @@ The aggregate function :math:`F : \mathbb{R}^{n \times N} \rightarrow \mathbb{R}
 
         x = SX.sym('x'); [hidden]
         f = Function('f',{x},{sin(x)}); [hidden]
+        N = 4; [hidden]
 
         F = f.map(N,'thread',4);
 
@@ -712,6 +739,7 @@ In case each for-loop iteration depends on the result from the previous iteratio
         x = SX.sym("x") [hidden]
         f = Function("f",[x],[sin(x)]) [hidden]
         x0 = MX.sym("x0") [hidden]
+        N = 4 [hidden]
 
         x = x0
         for i in range(N):
@@ -726,6 +754,7 @@ In case each for-loop iteration depends on the result from the previous iteratio
         x = SX.sym('x'); [hidden]
         f = Function('f',{x},{sin(x)}); [hidden]
         x0 = MX.sym('x0'); [hidden]
+        N = 4; [hidden]
 
         x = x0;
         for i=1:N
@@ -741,7 +770,8 @@ For a given function :math:`f : \mathbb{R}^{n} \rightarrow \mathbb{R}^{n}`, the 
 
         x = SX.sym("x") [hidden]
         f = Function("f",[x],[sin(x)]) [hidden]
-  
+        N = 4 [hidden]
+
         F = f.fold(N)
 
     &&
@@ -750,6 +780,7 @@ For a given function :math:`f : \mathbb{R}^{n} \rightarrow \mathbb{R}^{n}`, the 
 
         x = SX.sym('x'); [hidden]
         f = Function('f',{x},{sin(x)}); [hidden]
+        N = 4; [hidden]
 
         F = f.fold(N);
 

@@ -423,9 +423,12 @@ Note that such statement does not modify the actual optimal value of ``y`` in a 
     x = opti.variable() [hidden]
     y = opti.variable() [hidden]
 
-    opti.minimize(  (y-x**2)**2   ) [hidden]
     opti.subject_to( x**2+y**2==1 ) [hidden]
     opti.subject_to(       x+y>=1 ) [hidden]
+
+    obj = (y-x**2)**2
+
+    opti.minimize(obj)
 
     opti.solver("ipopt") [hidden]
     sol = opti.solve() [hidden]
@@ -439,9 +442,12 @@ Note that such statement does not modify the actual optimal value of ``y`` in a 
     x = opti.variable(); [hidden]
     y = opti.variable(); [hidden]
 
-    opti.minimize(  (y-x^2)^2   ); [hidden]
     opti.subject_to( x^2+y^2==1 ); [hidden]
     opti.subject_to(     x+y>=1 ); [hidden]
+
+    obj = (y-x^2)^2;
+
+    opti.minimize(obj);
 
     opti.solver('ipopt'); [hidden]
     sol = opti.solve() [hidden]
@@ -465,7 +471,7 @@ A related usage pattern is to evaluate an expression at the initial guess:
     opti.solver("ipopt") [hidden]
     sol = opti.solve() [hidden]
 
-    print(sol.value(x**2+y,sol.initial()))
+    print(sol.value(x**2+y,opti.initial()))
 
 .. exec-block:: octave
 
@@ -481,7 +487,7 @@ A related usage pattern is to evaluate an expression at the initial guess:
     opti.solver('ipopt'); [hidden]
     sol = opti.solve() [hidden]
 
-    sol.value(x**2+y,sol.initial())
+    sol.value(x**2+y,opti.initial())
 
 Dual variables
 ^^^^^^^^^^^^^^
@@ -496,7 +502,7 @@ In order to obtain dual variables (Lagrange multipliers) of constraints, make su
     x = opti.variable() [hidden]
     y = opti.variable() [hidden]
 
-    opti.minimize(  (y-x^2)^2   ); [hidden]
+    opti.minimize(  (y-x**2)**2   ) [hidden]
 
     opti.solver("ipopt") [hidden]
 
