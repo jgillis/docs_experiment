@@ -1,0 +1,4 @@
+Traceback (most recent call last):
+  File "76a6e673d54ab13293d78003f30af43d260313eea68dcd5a3065cd382dfd646b.python.in", line 14, in <module>
+    vdot = (u-a*v**2)/m-g
+NameError: name 'g' is not defined

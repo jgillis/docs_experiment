@@ -1,0 +1,30 @@
+qp =
+
+  scalar structure containing the fields:
+
+    x =
+
+    [x, y]
+
+    f =
+
+    (sq(x)+sq(y))
+
+    g =
+
+    ((x+y)-10)
+
+
+
+
+####################   qpOASES  --  QP NO.   1   #####################
+
+    Iter   |    StepLength    |       Info       |   nFX   |   nAC    
+ ----------+------------------+------------------+---------+--------- 
+       0   |   1.866661e-07   |   ADD CON    0   |     1   |     1   
+       1   |   8.333622e-10   |   REM BND    1   |     0   |     1   
+       2   |   1.000000e+00   |    QP SOLVED     |     0   |     1   
+x_opt =
+
+[5, 5]
+

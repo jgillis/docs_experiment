@@ -1,0 +1,4 @@
+Traceback (most recent call last):
+  File "16eadde14cd06a87ed7be696d2a50b0a35fef2a89ca087988695e4ae8bd63db4.python.in", line 11, in <module>
+    F = f.map(N)
+NameError: name 'N' is not defined

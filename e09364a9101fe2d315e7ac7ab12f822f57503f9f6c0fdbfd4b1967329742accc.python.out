@@ -1,0 +1,4 @@
+Traceback (most recent call last):
+  File "e09364a9101fe2d315e7ac7ab12f822f57503f9f6c0fdbfd4b1967329742accc.python.in", line 1, in <module>
+    dae = DaeBuilder()
+NameError: name 'DaeBuilder' is not defined

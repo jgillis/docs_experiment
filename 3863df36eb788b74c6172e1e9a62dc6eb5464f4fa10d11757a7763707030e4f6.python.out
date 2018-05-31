@@ -1,0 +1,5 @@
+-1.35
+Traceback (most recent call last):
+  File "3863df36eb788b74c6172e1e9a62dc6eb5464f4fa10d11757a7763707030e4f6.python.in", line 10, in <module>
+    import scipy
+ModuleNotFoundError: No module named 'scipy'

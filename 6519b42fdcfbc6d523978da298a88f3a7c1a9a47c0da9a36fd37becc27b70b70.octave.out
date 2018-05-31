@@ -1,0 +1,22 @@
+nlp =
+
+  scalar structure containing the fields:
+
+    x =
+
+    [x, y, z]
+
+    f =
+
+    (sq(x)+(100*sq(z)))
+
+    g =
+
+    ((z+sq((1-x)))-y)
+
+
+S =
+
+S:(x0[3],p[],lbx[3],ubx[3],lbg,ubg,lam_x0[3],lam_g0)->(x[3],f,g,lam_x[3],lam_g,lam_p[]) IpoptInterface
+
+S:(x0[3],p[],lbx[3],ubx[3],lbg,ubg,lam_x0[3],lam_g0)->(x[3],f,g,lam_x[3],lam_g,lam_p[]) IpoptInterface

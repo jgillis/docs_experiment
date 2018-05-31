@@ -1,0 +1,4 @@
+Traceback (most recent call last):
+  File "d71c89d5ff78741c30d2ed6ffb7b7eb7611da6a28a907cf311dd48048fa75071.python.in", line 1, in <module>
+    x = MX.sym('x')
+NameError: name 'MX' is not defined

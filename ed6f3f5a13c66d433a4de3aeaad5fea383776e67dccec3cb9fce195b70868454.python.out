@@ -1,0 +1,5 @@
+0.245507
+Traceback (most recent call last):
+  File "ed6f3f5a13c66d433a4de3aeaad5fea383776e67dccec3cb9fce195b70868454.python.in", line 15, in <module>
+    interp = ip.RectBivariateSpline(xgrid, ygrid, data)
+NameError: name 'ip' is not defined

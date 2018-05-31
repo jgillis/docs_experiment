@@ -1,0 +1,4 @@
+Traceback (most recent call last):
+  File "08a9474df16b09501d98039e6e97d5d7f5ff7c5793c00863b2bf0d4f1b25785c.python.in", line 9, in <module>
+    lut = ca.interpolant('name','bspline',[xgrid,ygrid],data_flat)
+NameError: name 'ca' is not defined

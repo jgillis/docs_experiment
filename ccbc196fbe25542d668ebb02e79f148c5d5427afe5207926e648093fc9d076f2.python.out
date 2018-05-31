@@ -1,0 +1,4 @@
+Traceback (most recent call last):
+  File "ccbc196fbe25542d668ebb02e79f148c5d5427afe5207926e648093fc9d076f2.python.in", line 1, in <module>
+    x = SX.sym("x")
+NameError: name 'SX' is not defined

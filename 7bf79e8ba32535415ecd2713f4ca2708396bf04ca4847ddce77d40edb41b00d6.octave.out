@@ -1,0 +1,9 @@
+parse error near line 3 of file /home/jgillis/eg/sphinx/7bf79e8ba32535415ecd2713f4ca2708396bf04ca4847ddce77d40edb41b00d6.octave.in
+
+  syntax error
+
+>>> classdef MyCallback < casadi.Callback
+            ^
+
+error: source: error sourcing file '/home/jgillis/eg/sphinx/7bf79e8ba32535415ecd2713f4ca2708396bf04ca4847ddce77d40edb41b00d6.octave.in'
+error: execution exception in 7bf79e8ba32535415ecd2713f4ca2708396bf04ca4847ddce77d40edb41b00d6.octave.in

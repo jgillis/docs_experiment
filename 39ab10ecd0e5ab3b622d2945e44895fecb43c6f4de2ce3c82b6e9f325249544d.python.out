@@ -1,0 +1,4 @@
+Traceback (most recent call last):
+  File "39ab10ecd0e5ab3b622d2945e44895fecb43c6f4de2ce3c82b6e9f325249544d.python.in", line 12, in <module>
+    [H,g] = hessian(dot(x,x),x)
+NameError: name 'x' is not defined

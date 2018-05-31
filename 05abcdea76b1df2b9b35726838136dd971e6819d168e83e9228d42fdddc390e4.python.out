@@ -1,0 +1,4 @@
+Traceback (most recent call last):
+  File "05abcdea76b1df2b9b35726838136dd971e6819d168e83e9228d42fdddc390e4.python.in", line 6, in <module>
+    system('gcc -fPIC -shared gen.c -o gen.so')
+NameError: name 'system' is not defined

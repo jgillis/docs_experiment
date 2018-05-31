@@ -1,0 +1,4 @@
+Traceback (most recent call last):
+  File "aa247d868af583a6b792e1af5268397eaa39aa904b38c7ad3977ff2ddc47442b.python.in", line 12, in <module>
+    w = [x[0:3,:], x[3:5,:]]
+NameError: name 'x' is not defined

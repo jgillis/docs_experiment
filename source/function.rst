@@ -399,7 +399,7 @@ A solver for this problem, using the "ipopt" plugin, can be created using the sy
 .. exec-block:: octave
 
     x = SX.sym('x'); y = SX.sym('y'); z = SX.sym('z');
-    nlp = struct('x',[x;y;z], 'f',x^2+100*z^2, 'g',z+(1-x)^2-y)
+    nlp = struct('x',[x;y;z], 'f',x^2+100*z^2, 'g',z+(1-x)^2-y);
     S = nlpsol('S', 'ipopt', nlp)
     disp(S)
 
@@ -425,7 +425,7 @@ function ``S``:
     .. exec-block:: octave
 
         x = SX.sym('x'); y = SX.sym('y'); z = SX.sym('z'); [hidden]
-        nlp = struct('x',[x;y;z], 'f',x^2+100*z^2, 'g',z+(1-x)^2-y) [hidden]
+        nlp = struct('x',[x;y;z], 'f',x^2+100*z^2, 'g',z+(1-x)^2-y); [hidden]
         S = nlpsol('S', 'ipopt', nlp); [hidden]
 
         r = S('x0',[2.5,3.0,0.75],...
@@ -487,7 +487,7 @@ To solve this problem with the high-level interface, we simply replace ``nlpsol`
 .. exec-block:: octave
 
     x = SX.sym('x'); y = SX.sym('y');
-    qp = struct('x',[x;y], 'f',x^2+y^2, 'g',x+y-10)
+    qp = struct('x',[x;y], 'f',x^2+y^2, 'g',x+y-10);
     S = qpsol('S', 'qpoases', qp);
     disp(S)
 
@@ -511,7 +511,7 @@ created with ``nlpsol``. Since the solution is unique, it is less important to p
     .. exec-block:: octave
 
         x = SX.sym('x'); y = SX.sym('y'); [hidden]
-        qp = struct('x',[x;y], 'f',x^2+y^2, 'g',x+y-10) [hidden]
+        qp = struct('x',[x;y], 'f',x^2+y^2, 'g',x+y-10); [hidden]
         S = qpsol('S', 'qpoases', qp); [hidden]
 
         r = S('lbg',0);

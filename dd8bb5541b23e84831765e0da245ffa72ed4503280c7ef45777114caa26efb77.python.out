@@ -1,0 +1,4 @@
+  File "dd8bb5541b23e84831765e0da245ffa72ed4503280c7ef45777114caa26efb77.python.in", line 5
+    sfile = ZipFile(jmu_name','r')
+                              ^
+SyntaxError: invalid syntax
