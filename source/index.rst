@@ -9,10 +9,6 @@
 Welcome to CasADi's documentation!
 ==================================
 
-
-
-
-
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
@@ -28,17 +24,6 @@ Welcome to CasADi's documentation!
    ocp
    opti
    usage
-
-
-Inline math :math:`\sqrt{x}`.
-
-Non-inline math
-
-.. math::
-
-  W^{3\beta}_{\delta_1 \rho_1 \sigma_2} \approx U^{3\beta}_{\delta_1 \rho_1}
-
-
 
 Indices and tables
 ==================

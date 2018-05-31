@@ -762,6 +762,8 @@ The first input and output are used for accumulating, while the remainder inputs
 The ``map``/``mapaccum`` operation exhibits a graph size and initialization time that scales logarithmically with :math:`n`.
 
 
+TODO remove empty lines in front of code
+
 .. rubric:: Footnotes
 
 .. [#f1] for problems with free end time, you can always scale time by introducing an extra parameter and substitute :math:`t` for a dimensionless time variable that goes from 0 to 1
