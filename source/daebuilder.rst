@@ -119,11 +119,11 @@ quadratic air friction term and gravity, which loses mass as it uses up fuel:
 
 .. math::
 
-    \begin{align}
+    \begin{aligned}
      \dot{h} &= v,                    \qquad &h(0) = 0 \\
      \dot{v} &= (u - a \, v^2)/m - g, \qquad &v(0) = 0 \\
      \dot{m} &= -b \, u^2,            \qquad &m(0) = 1
-    \end{align}
+    \end{aligned}
 
 where the three states correspond to height, velocity and mass, respectively.
 :math:`u` is the thrust of the rocket and :math:`(a,b)` are parameters.

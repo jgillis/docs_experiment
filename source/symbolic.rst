@@ -161,7 +161,7 @@ The commands above would be equivalent to:
 
 
 TODO
-More usage examples for |SX| can be found in the tutorials at http://docs.casadi.org/. For documentation of particular functions of this class (and others), find the ``C++ API docs'' on the website and search for information about ``casadi::Matrix``.
+More usage examples for |SX| can be found in the tutorials at http://docs.casadi.org/. For documentation of particular functions of this class (and others), find the "C++ API docs" on the website and search for information about ``casadi::Matrix``.
 
 The |MX| symbolics
 ------------------

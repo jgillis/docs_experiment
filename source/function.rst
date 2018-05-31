@@ -245,12 +245,11 @@ is a DAE of semi-explicit form with quadratures:
 
 .. math::
 
-    \begin{align}
+    \begin{aligned}
      \dot{x} &= f_{\text{ode}}(t,x,z,p), \qquad x(0) = x_0 \\
           0  &= f_{\text{alg}}(t,x,z,p) \\
      \dot{q} &= f_{\text{quad}}(t,x,z,p), \qquad q(0) = 0
-    \end{align}
-
+    \end{aligned}
 
 For solvers of *ordinary* differential equations, the second equation and the algebraic variables :math:`z` must be absent.
 
@@ -267,12 +266,12 @@ Consider for example the DAE:
 
 .. math::
 
-  \begin{align}
+  \begin{aligned}
    \dot{x} &= z+p, \\
         0  &= z \, \cos(z)-x
-  \end{align}
+  \end{aligned}
 
-An integrator, using the ''idas'' plugin, can be created using the syntax:
+An integrator, using the "idas" plugin, can be created using the syntax:
 
 .. exec-block:: python
 
@@ -374,7 +373,7 @@ Consider the following form of the so-called Rosenbrock problem:
     \end{array}
 
 
-A solver for this problem, using the ''ipopt'' plugin, can be created using the syntax:
+A solver for this problem, using the "ipopt" plugin, can be created using the syntax:
 
 .. exec-block:: python
 
