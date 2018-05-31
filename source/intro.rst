@@ -40,17 +40,13 @@ If you use |casadi| in published scientific work, please cite the following:
 
 .. code-block:: none
 
-    @PHDTHESIS{Andersson2013b,
-      author = {Joel Andersson},
-      title = {{A} {G}eneral-{P}urpose {S}oftware {F}ramework for
-               {D}ynamic {O}ptimization},
-      school = {Arenberg Doctoral School, KU Leuven},
-      year = {2013},
-      type = {{P}h{D} thesis},
-      address = {Department of Electrical Engineering (ESAT/SCD) and
-                 Optimization in Engineering Center,
-                 Kasteelpark Arenberg 10, 3001-Heverlee, Belgium},
-      month = {October}
+    @Article{Andersson2018,
+      Author = {Joel A E Andersson and Joris Gillis and Greg Horn
+                and James B Rawlings and Moritz Diehl},
+      Title = {{CasADi} -- {A} software framework for nonlinear optimization
+               and optimal control},
+      Journal = {Mathematical Programming Computation},
+      Year = {In Press, 2018},
     }
 
 Reading this document
