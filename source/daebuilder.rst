@@ -5,9 +5,6 @@ The |DaeBuilder| class
 
 .. _sec-daebuilder:
 
-The |DaeBuilder| class
-----------------------
-
 The |DaeBuilder| class in |casadi| is an auxiliary class intended to
 facilitate the modeling complex dynamical systems for later use with optimal
 control algorithms. This class can be seen as a low-level alternative to
