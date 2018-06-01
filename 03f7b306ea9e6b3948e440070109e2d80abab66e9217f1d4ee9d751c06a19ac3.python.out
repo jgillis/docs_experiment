@@ -1,4 +1,0 @@
-Traceback (most recent call last):
-  File "03f7b306ea9e6b3948e440070109e2d80abab66e9217f1d4ee9d751c06a19ac3.python.in", line 12, in <module>
-    for i in range(N):
-NameError: name 'N' is not defined

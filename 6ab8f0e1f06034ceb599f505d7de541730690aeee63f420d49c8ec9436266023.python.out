@@ -1,4 +1,0 @@
-Traceback (most recent call last):
-  File "6ab8f0e1f06034ceb599f505d7de541730690aeee63f420d49c8ec9436266023.python.in", line 6, in <module>
-    r = F(x0=0, z0=0, p=0.1)
-NameError: name 'F' is not defined

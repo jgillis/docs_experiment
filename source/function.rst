@@ -113,10 +113,10 @@ To call a function object, you either pass the argument in the correct order:
 
         x = MX.sym('x',2); [hidden]
         y = MX.sym('y'); [hidden]
-        f = Function('f',{x,y},{x,sin(y)*x},{'x','y'},{'r','q'}) [hidden]
+        f = Function('f',{x,y},{x,sin(y)*x},{'x','y'},{'r','q'}); [hidden]
         [r0, q0] = f(1.1,3.3);
-        display(r0)
-        display(q0)
+        disp(r0)
+        disp(q0)
 
 or the arguments and their names as follows, which will result in a dictionary (``dict`` in Python, ``struct`` in MATLAB and ``std::map<std::string, MatrixType>`` in C++):
 
@@ -134,9 +134,9 @@ or the arguments and their names as follows, which will result in a dictionary (
 
         x = MX.sym('x',2); [hidden]
         y = MX.sym('y'); [hidden]
-        f = Function('f',{x,y},{x,sin(y)*x},{'x','y'},{'r','q'}) [hidden]
+        f = Function('f',{x,y},{x,sin(y)*x},{'x','y'},{'r','q'}); [hidden]
         res = f('x',1.1,'y',3.3);
-        display(res)
+        disp(res)
 
 When calling a function object, the dimensions (but not necessarily the sparsity patterns) of the evaluation arguments have to match those of the function inputs, with two exceptions:
 
@@ -163,14 +163,14 @@ When the number of inputs to a function object is large or changing, an alternat
 
         x = MX.sym('x',2); [hidden]
         y = MX.sym('y'); [hidden]
-        f = Function('f',{x,y},{x,sin(y)*x},{'x','y'},{'r','q'}) [hidden]
+        f = Function('f',{x,y},{x,sin(y)*x},{'x','y'},{'r','q'}); [hidden]
 
         arg = {1.1,3.3};
         res = f.call(arg);
-        display(res)
+        disp(res)
         arg = struct('x',1.1,'y',3.3);
         res = f.call(arg);
-        display(res)
+        disp(res)
 
 Converting |MX| to |SX|
 -----------------------
@@ -222,6 +222,7 @@ The syntax for this, assuming :math:`n=m=1` for simplicity, is:
         g1 = cos(x-z)
         g = Function('g',[z,x],[g0,g1])
         G = rootfinder('G','newton',g)
+        print(G)
     &&
 
     .. exec-block:: octave
@@ -235,6 +236,7 @@ The syntax for this, assuming :math:`n=m=1` for simplicity, is:
         g1 = cos(x-z);
         g = Function('g',{z,x},{g0,g1});
         G = rootfinder('G','newton',g);
+        disp(G)
 
 where the ``rootfinder`` function expects a display name, the name of a solver plugin
 (here a simple full-step Newton method) and the residual function.
@@ -400,7 +402,7 @@ A solver for this problem, using the "ipopt" plugin, can be created using the sy
 
     x = SX.sym('x'); y = SX.sym('y'); z = SX.sym('z');
     nlp = struct('x',[x;y;z], 'f',x^2+100*z^2, 'g',z+(1-x)^2-y);
-    S = nlpsol('S', 'ipopt', nlp)
+    S = nlpsol('S', 'ipopt', nlp);
     disp(S)
 
 
@@ -431,7 +433,7 @@ function ``S``:
         r = S('x0',[2.5,3.0,0.75],...
               'lbg',0,'ubg',0);
         x_opt = r.x;
-        display(x_opt)
+        disp(x_opt)
 
 
 TODO make tiny
@@ -516,7 +518,7 @@ created with ``nlpsol``. Since the solution is unique, it is less important to p
 
         r = S('lbg',0);
         x_opt = r.x;
-        display(x_opt)
+        disp(x_opt)
 
 
 Low-level interface
@@ -580,6 +582,7 @@ Since we used |casadi|'s |DM|-type above, we can simply query the sparsity patte
         qp['h'] = H.sparsity()
         qp['a'] = A.sparsity()
         S = conic('S','qpoases',qp)
+        print(S)
 
 
     .. exec-block:: octave
@@ -593,6 +596,7 @@ Since we used |casadi|'s |DM|-type above, we can simply query the sparsity patte
         qp.h = H.sparsity();
         qp.a = A.sparsity();
         S = conic('S','qpoases',qp);
+        disp(S)
 
 
 The returned ``Function`` instance will have a *different* input/output signature compared to the high-level interface, one that includes the matrices :math:`H` and :math:`A`:
@@ -632,7 +636,7 @@ The returned ``Function`` instance will have a *different* input/output signatur
         r = S('h', H, 'g', g,...
               'a', A, 'lba', lba);
         x_opt = r.x;
-        display(x_opt)
+        disp(x_opt)
 
 
 
@@ -655,8 +659,11 @@ Suppose you are interested in computing a function :math:`f : \mathbb{R}^{n} \ri
 
         x = SX.sym("x") [hidden]
         f = Function("f",[x],[sin(x)]) [hidden]
-        X = MX.sym("X",1,8) [hidden]
-        N = 4 [hidden]
+
+        N = 4
+        X = MX.sym("X",1,N)
+
+        print(f)
 
         ys = []
         for i in range(N):
@@ -664,6 +671,7 @@ Suppose you are interested in computing a function :math:`f : \mathbb{R}^{n} \ri
 
         Y = hcat(ys)
         F = Function('F',[X],[Y])
+        print(F)
 
     &&
 
@@ -671,15 +679,19 @@ Suppose you are interested in computing a function :math:`f : \mathbb{R}^{n} \ri
 
         x = SX.sym('x'); [hidden]
         f = Function('f',{x},{sin(x)}); [hidden]
-        X = MX.sym('X',1,8); [hidden]
-        N = 4; [hidden]
+
+        N = 4;
+        X = MX.sym('X',1,N);
+
+        disp(f)
 
         ys = {};
         for i=1:N
-          ys = {ys{:} f(X(:,i))};
+          ys{end+1} = f(X(:,i));
         end
-        Y = hcat(ys);
+        Y = [ys{:}];
         F = Function('F',{X},{Y});
+        disp(F)
 
 The aggregate function :math:`F : \mathbb{R}^{n \times N} \rightarrow \mathbb{R}^{m \times N}` can be obtained with the ``map`` construct:
 
@@ -692,6 +704,7 @@ The aggregate function :math:`F : \mathbb{R}^{n \times N} \rightarrow \mathbb{R}
 
 
         F = f.map(N)
+        print(F)
 
     &&
 
@@ -702,8 +715,9 @@ The aggregate function :math:`F : \mathbb{R}^{n \times N} \rightarrow \mathbb{R}
         N = 4; [hidden]
 
         F = f.map(N);
+        disp(F)
 
-|casadi| can be instructed to parallelize when :math:`F` gets evaluated. In the following example, we dedicate 4 threads for the ``map`` task.
+|casadi| can be instructed to parallelize when :math:`F` gets evaluated. In the following example, we dedicate 2 threads for the ``map`` task.
 
 .. side-by-side::
     .. exec-block:: python
@@ -712,7 +726,8 @@ The aggregate function :math:`F : \mathbb{R}^{n \times N} \rightarrow \mathbb{R}
         f = Function("f",[x],[sin(x)]) [hidden]
         N = 4 [hidden]
 
-        F = f.map(N,"thread",4)
+        F = f.map(N,"thread",2)
+        print(F)
 
     &&
 
@@ -722,7 +737,8 @@ The aggregate function :math:`F : \mathbb{R}^{n \times N} \rightarrow \mathbb{R}
         f = Function('f',{x},{sin(x)}); [hidden]
         N = 4; [hidden]
 
-        F = f.map(N,'thread',4);
+        F = f.map(N,'thread',2);
+        disp(F)
 
 The ``map`` operation supports primitive functions :math:`f` with multiple inputs/outputs which can also be matrices. Aggregation will always happen horizontally.
 
@@ -746,6 +762,7 @@ In case each for-loop iteration depends on the result from the previous iteratio
           x = f(x)
 
         F = Function('F',[x0],[x])
+        print(F)
 
     &&
 
@@ -761,7 +778,8 @@ In case each for-loop iteration depends on the result from the previous iteratio
           x = f(x);
         end
 
-        F = Function('F',{x0},{x})
+        F = Function('F',{x0},{x});
+        disp(F)
 
 For a given function :math:`f : \mathbb{R}^{n} \rightarrow \mathbb{R}^{n}`, the result function :math:`F : \mathbb{R}^{n} \rightarrow \mathbb{R}^{n}` can be obtained with the ``fold`` construct:
 
@@ -773,7 +791,7 @@ For a given function :math:`f : \mathbb{R}^{n} \rightarrow \mathbb{R}^{n}`, the 
         N = 4 [hidden]
 
         F = f.fold(N)
-
+        print(F)
     &&
 
     .. exec-block:: octave
@@ -783,6 +801,7 @@ For a given function :math:`f : \mathbb{R}^{n} \rightarrow \mathbb{R}^{n}`, the 
         N = 4; [hidden]
 
         F = f.fold(N);
+        disp(F)
 
 In case intermediate accumulator values are desired as output (:math:`\mathbb{R}^{n} \rightarrow \mathbb{R}^{n \times N}`), use ``mapaccum`` instead of ``fold``.
 

@@ -1,9 +1,0 @@
-parse error near line 14 of file /home/jgillis/eg/sphinx/56c7a323d6e8a101184661d285ea406663f92b736fe7d143262e1b7dc8fb0dec.octave.in
-
-  syntax error
-
->>> print(w[0], w[1])
-           ^
-
-error: source: error sourcing file '/home/jgillis/eg/sphinx/56c7a323d6e8a101184661d285ea406663f92b736fe7d143262e1b7dc8fb0dec.octave.in'
-error: execution exception in 56c7a323d6e8a101184661d285ea406663f92b736fe7d143262e1b7dc8fb0dec.octave.in

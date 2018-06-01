@@ -1,4 +1,0 @@
-Traceback (most recent call last):
-  File "52ac7fa066f3182007f0f69997be2fa358522ca050550f545b4b9b58bc6a1e63.python.in", line 9, in <module>
-    F = f.fold(N)
-NameError: name 'N' is not defined

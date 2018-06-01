@@ -1,4 +1,0 @@
-Traceback (most recent call last):
-  File "3ebbdeb091734614050c7e5951ef23b8730308092d29fd86bf169de04677cc17.python.in", line 12, in <module>
-    print(gradient(dot(A,A),A))
-NameError: name 'A' is not defined

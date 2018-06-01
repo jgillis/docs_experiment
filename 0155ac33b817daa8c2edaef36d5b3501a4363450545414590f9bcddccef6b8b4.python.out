@@ -1,4 +1,0 @@
-Traceback (most recent call last):
-  File "0155ac33b817daa8c2edaef36d5b3501a4363450545414590f9bcddccef6b8b4.python.in", line 1, in <module>
-    H = 2*DM.eye(2)
-NameError: name 'DM' is not defined

@@ -1,4 +1,0 @@
-Traceback (most recent call last):
-  File "f4168e94864848648eaf05408b68217261695eddbb0060b0699e61299cc49821.python.in", line 16, in <module>
-    opti.minimize(  (y-x^2)^2   );
-TypeError: unsupported operand type(s) for ^: 'MX' and 'int'

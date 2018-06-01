@@ -1,4 +1,0 @@
-Traceback (most recent call last):
-  File "8f949a81d2f2c40aa534abb5a8785c9ea42c609ab9b48c9c26038b369b4a08c0.python.in", line 5, in <module>
-    ocp.parse_fmi('modelDescription.xml')
-NameError: name 'ocp' is not defined

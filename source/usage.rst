@@ -478,10 +478,8 @@ each operation. Further information is available in the API documentation.
             [x,y]
             [x; y]
             c = {x,y};
-            horzcat(c{:})
+            [c{:}]
             vertcat(c{:})
-            hcat(c)
-            vcat(c)
    * - Horizontal/vertical split (inverse of concatenation)
      - .. code-block:: python
 

@@ -1,0 +1,2 @@
+f:(i0)->(o0) SXFunction
+F:(i0[1x4])->(o0[1x4]) MXFunction

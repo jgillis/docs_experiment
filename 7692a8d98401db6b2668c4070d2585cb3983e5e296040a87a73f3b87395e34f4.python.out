@@ -1,4 +1,0 @@
-Traceback (most recent call last):
-  File "7692a8d98401db6b2668c4070d2585cb3983e5e296040a87a73f3b87395e34f4.python.in", line 11, in <module>
-    g0 = sin(x+y)
-NameError: name 'y' is not defined

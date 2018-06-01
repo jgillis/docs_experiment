@@ -1,4 +1,0 @@
-Traceback (most recent call last):
-  File "b00bd58f3033fc50ffe21e1dee2dbe66aa6264b6108f89cae19ee45c777c2c4d.python.in", line 7, in <module>
-    f = Function.jit('f',body,\
-NameError: name 'Function' is not defined

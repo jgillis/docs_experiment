@@ -1,9 +1,0 @@
-parse error near line 12 of file /home/jgillis/eg/sphinx/e5cf754027ea4b052c76b2b14ff9c47f0367b0a0c24d7cae6736380c5c369c63.octave.in
-
-  syntax error
-
->>>      {sp,sp}, {sp});
-                    ^
-
-error: source: error sourcing file '/home/jgillis/eg/sphinx/e5cf754027ea4b052c76b2b14ff9c47f0367b0a0c24d7cae6736380c5c369c63.octave.in'
-error: execution exception in e5cf754027ea4b052c76b2b14ff9c47f0367b0a0c24d7cae6736380c5c369c63.octave.in

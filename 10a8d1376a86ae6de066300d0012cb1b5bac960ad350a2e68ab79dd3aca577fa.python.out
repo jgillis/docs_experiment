@@ -1,4 +1,0 @@
-Traceback (most recent call last):
-  File "10a8d1376a86ae6de066300d0012cb1b5bac960ad350a2e68ab79dd3aca577fa.python.in", line 7, in <module>
-    qp['h'] = H.sparsity()
-NameError: name 'H' is not defined

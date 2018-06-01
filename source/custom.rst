@@ -139,7 +139,7 @@ MATLAB
 In MATLAB, a custom function class can be defined as follows, in a file
 ``MyCallback.m``:
 
-.. exec-block:: octave
+.. code-block:: octave
 
     classdef MyCallback < casadi.Callback
       properties
@@ -179,45 +179,51 @@ the ownership of the class will *not* be shared between all references.
 So the user must not allow a class instance to get deleted while it is still
 in use, e.g. by making it ``persistent``.
 
-.. exec-block:: octave
+..
+    f = fopen('MyCallback.m','w'); [hidden]
+    fprintf(f,'classdef MyCallback < casadi.Callback\n'); [hidden]
+    fprintf(f,'  properties\n'); [hidden]
+    fprintf(f,'    d\n'); [hidden]
+    fprintf(f,'  end\n'); [hidden]
+    fprintf(f,'  methods\n'); [hidden]
+    fprintf(f,'    function self = MyCallback(name, d)\n'); [hidden]
+    fprintf(f,'      self@casadi.Callback();\n'); [hidden]
+    fprintf(f,'      self.d = d;\n'); [hidden]
+    fprintf(f,'      construct(self, name);\n'); [hidden]
+    fprintf(f,'    end [hidden]\n');
+    fprintf(f,'\n');
+    fprintf(f,'    %% Number of inputs and outputs\n'); [hidden]
+    fprintf(f,'    function v=get_n_in(self)\n'); [hidden]
+    fprintf(f,'      v=1; [hidden]\n');
+    fprintf(f,'    end [hidden]\n');
+    fprintf(f,'    function v=get_n_out(self)\n'); [hidden]
+    fprintf(f,'      v=1; [hidden]\n');
+    fprintf(f,'    end [hidden]\n');
+    fprintf(f,'\n');
+    fprintf(f,'    %% Initialize the object\n'); [hidden]
+    fprintf(f,'    function init(self)\n'); [hidden]
+    fprintf(f,'      disp(''initializing object'')\n'); [hidden]
+    fprintf(f,'    end\n'); [hidden]
+    fprintf(f,'\n');
+    fprintf(f,'    %% Evaluate numerically\n'); [hidden]
+    fprintf(f,'    function arg = eval(self, arg)\n'); [hidden]
+    fprintf(f,'      x = arg{1};\n'); [hidden]
+    fprintf(f,'      f = sin(self.d * x);\n'); [hidden]
+    fprintf(f,'      arg = {f};\n'); [hidden]
+    fprintf(f,'    end\n'); [hidden]
+    fprintf(f,'  end\n'); [hidden]
+    fprintf(f,'end\n'); [hidden]
+    fclose(f); [hidden]
 
-    classdef MyCallback < casadi.Callback [hidden]
-      properties [hidden]
-        d [hidden]
-      end [hidden]
-      methods [hidden]
-        function self = MyCallback(name, d) [hidden]
-          self@casadi.Callback(); [hidden]
-          self.d = d; [hidden]
-          construct(self, name); [hidden]
-        end [hidden]
-
-        % Number of inputs and outputs [hidden]
-        function v=get_n_in(self) [hidden]
-          v=1; [hidden]
-        end [hidden]
-        function v=get_n_out(self) [hidden]
-          v=1; [hidden]
-        end [hidden]
-
-        % Initialize the object [hidden]
-        function init(self) [hidden]
-          disp('initializing object') [hidden]
-        end [hidden]
-
-        % Evaluate numerically [hidden]
-        function arg = eval(self, arg) [hidden]
-          x = arg{1}; [hidden]
-          f = sin(self.d * x); [hidden]
-          arg = {f}; [hidden]
-        end [hidden]
-      end [hidden]
-    end [hidden]
+.. code-block:: octave
 
     % Use the function
     f = MyCallback('f', 0.5);
     res = f(2);
     disp(res)
+
+    x = MX.sym('x');
+    disp(f(x))
 
 C++
 ^^^
@@ -349,25 +355,27 @@ where the user simply specifies the source code as a C language string.
     .. exec-block:: python
 
         body =\
-        'r[0] = x[0];\n'+\
-        'while (r[0]<s[0]) {\n'+\
-        ' r[0] *= r[0];\n'+\
-        '}\n'
+        'r[0] = x[0];'+\
+        'while (r[0]<s[0]) {'+\
+        ' r[0] *= r[0];'+\
+        '}'
 
         f = Function.jit('f',body,\
               ['x','s'],['r'])
+        print(f)
     &&
 
     .. exec-block:: octave
 
         body =[...
-        'r[0] = x[0];\n',...
-        'while (r[0]<s[0]) {\n',...
-        ' r[0] *= r[0];\n',...
-        '}\n'];
+        'r[0] = x[0];',...
+        'while (r[0]<s[0]) {',...
+        ' r[0] *= r[0];',...
+        '}'];
 
         f = Function.jit('f',body,...
               {'x','s'},{'r'});
+        disp(f)
 
 
 These four arguments of ``Function.jit`` are mandatory:
@@ -382,29 +390,31 @@ of the sparsity patterns:
     .. exec-block:: python
 
         body =\ [hidden]
-        'r[0] = x[0];\n'+\ [hidden]
-        'while (r[0]<s[0]) {\n'+\ [hidden]
-        ' r[0] *= r[0];\n'+\ [hidden]
+        'r[0] = x[0];'+\ [hidden]
+        'while (r[0]<s[0]) {'+\ [hidden]
+        ' r[0] *= r[0];'+\ [hidden]
         '}\n' [hidden]
 
         sp = Sparsity.scalar()
         f = Function.jit('f',body,\
              ['x','s'], ['r'],\
              [sp,sp], [sp])
+        print(f)
     &&
 
     .. exec-block:: octave
 
         body =[... [hidden]
-        'r[0] = x[0];\n',... [hidden]
-        'while (r[0]<s[0]) {\n',... [hidden]
-        ' r[0] *= r[0];\n',... [hidden]
-        '}\n']; [hidden]
+        'r[0] = x[0];',... [hidden]
+        'while (r[0]<s[0]) {',... [hidden]
+        ' r[0] *= r[0];',... [hidden]
+        '}']; [hidden]
 
         sp = Sparsity.scalar();
         f = Function.jit('f',body,...
-             {'x','s'}, {'r'});
+             {'x','s'}, {'r'},...
              {sp,sp}, {sp});
+        disp(f)
 
 
 Both variants accept an optional 5th (or 7th) argument in the form of an
@@ -452,7 +462,7 @@ In MATLAB/Octave, the corresponding code reads:
     lut = casadi.interpolant('LUT','bspline',{xgrid},V);
     lut(2.5)
     % Using MATLAB/Octave builtin
-    interpn(xgrid,V,2.5,'spline')
+    interp1(xgrid,V,2.5,'spline')
 
 Note in particular that the ``grid`` and ``values`` arguments to ``interpolant`` must be numerical in nature.
 
@@ -520,6 +530,11 @@ to ``True``/``true``:
         system('gcc -fPIC -shared gen.c -o gen.so') [hidden]
         f = external('f', './gen.so',\
            dict(enable_fd=True))
+
+        e = jacobian(f(x),x)
+        D = Function('d',[x],[e])
+        print(D(0))
+
     &&
 
     .. exec-block:: octave
@@ -527,9 +542,13 @@ to ``True``/``true``:
         x = MX.sym('x'); [hidden]
         f = Function('f',{x},{sin(x)}); [hidden]
         f.generate('gen.c'); [hidden]
-        system('gcc -fPIC -shared gen.c -o gen.so') [hidden]
+        system('gcc -fPIC -shared gen.c -o gen.so'); [hidden]
         f = external('f', './gen.so',...
             struct('enable_fd',true));
+
+        e = jacobian(f(x),x);
+        D = Function('d',{x},{e});
+        disp(D(0))
 
 cf. :numref:`sec-codegen_syntax`.
 

@@ -1,4 +1,0 @@
-Traceback (most recent call last):
-  File "720199bf4cbdb4f623b9a5e62dd67e91d3dfcaebcef31f1ef0df8877c90a6d11.python.in", line 9, in <module>
-    F = f.map(N,"thread",4)
-NameError: name 'N' is not defined

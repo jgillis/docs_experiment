@@ -40,10 +40,13 @@ and computer code:
         opti.subject_to(       x+y>=1 )
 
         opti.solver('ipopt')
+        opti.solver("ipopt",dict(print_time=False),dict(print_level=False)) [hidden]
+
+
         sol = opti.solve()
 
-        sol.value(x)
-        sol.value(y)
+        print(sol.value(x))
+        print(sol.value(y))
     &&
 
     .. exec-block:: octave
@@ -58,6 +61,10 @@ and computer code:
         opti.subject_to(     x+y>=1 );
 
         opti.solver('ipopt');
+        options = struct('print_time',false); [hidden]
+        ipopt_options = struct('print_level',1); [hidden]
+
+        opti.solver('ipopt',options,ipopt_options); [hidden]
         sol = opti.solve();
 
         sol.value(x)
@@ -100,7 +107,7 @@ You may perform any CasADi MX operations on them, e.g. embedding integrator call
 
         opti = casadi.Opti(); [hidden]
 
-        p = opti.parameter()
+        p = opti.parameter();
         opti.set_value(p, 3)
 
 
@@ -188,7 +195,7 @@ You may make element-wise (in)equalities with vectors:
     .. exec-block:: octave
 
         opti = casadi.Opti(); [hidden]
-        p = opti.parameter() [hidden]
+        p = opti.parameter(); [hidden]
         x = opti.variable(5,1);
 
         opti.subject_to( x*p<=3 )
@@ -333,11 +340,20 @@ To warm start a solver, you need to explicitly transfer the solution of one prob
     opti.subject_to( x**2+y**2==1 ) [hidden]
     opti.subject_to(       x+y>=1 ) [hidden]
 
-    opti.solver("ipopt") [hidden]
+    opti.solver("ipopt",dict(print_time=False),dict(print_level=False)) [hidden]
+
 
     sol1 = opti.solve()
+    print(sol1.stats()["iter_count"])
+    
+    # Solving again makes no difference
+    sol1 = opti.solve()
+    print(sol1.stats()["iter_count"])
+
+    # Passing initial makes a difference
     opti.set_initial(sol1.value_variables())
     sol2 = opti.solve()
+    print(sol2.stats()["iter_count"])
 
 
 .. exec-block:: octave
@@ -351,12 +367,22 @@ To warm start a solver, you need to explicitly transfer the solution of one prob
     opti.subject_to( x^2+y^2==1 ); [hidden]
     opti.subject_to(     x+y>=1 ); [hidden]
 
-    opti.solver('ipopt'); [hidden]
+    options = struct('print_time',false); [hidden]
+    ipopt_options = struct('print_level',1); [hidden]
+
+    opti.solver('ipopt',options,ipopt_options); [hidden]
 
     sol1 = opti.solve();
+    sol1.stats.iter_count
+
+    % Solving again makes no difference
+    sol1 = opti.solve();
+    sol1.stats.iter_count
+
+    % Passing initial makes a difference
     opti.set_initial(sol1.value_variables());
     sol2 = opti.solve();
-
+    sol2.stats.iter_count
 
 In order to initialize the dual variables, e.g. when solving a set of similar optimization problems, you can use the following syntax:
 
@@ -372,7 +398,7 @@ In order to initialize the dual variables, e.g. when solving a set of similar op
     opti.subject_to( x**2+y**2==1 ) [hidden]
     opti.subject_to(       x+y>=1 ) [hidden]
 
-    opti.solver("ipopt") [hidden]
+    opti.solver("ipopt",dict(print_time=False),dict(print_level=False)) [hidden]
 
     sol = opti.solve()
     lam_g0 = sol.value(opti.lam_g)
@@ -389,7 +415,10 @@ In order to initialize the dual variables, e.g. when solving a set of similar op
     opti.subject_to( x^2+y^2==1 ); [hidden]
     opti.subject_to(     x+y>=1 ); [hidden]
 
-    opti.solver('ipopt'); [hidden]
+    options = struct('print_time',false); [hidden]
+    ipopt_options = struct('print_level',1); [hidden]
+
+    opti.solver('ipopt',options,ipopt_options); [hidden]
 
     sol = opti.solve();
     lam_g0 = sol.value(opti.lam_g);
@@ -430,7 +459,7 @@ Note that such statement does not modify the actual optimal value of ``y`` in a 
 
     opti.minimize(obj)
 
-    opti.solver("ipopt") [hidden]
+    opti.solver("ipopt",dict(print_time=False),dict(print_level=False)) [hidden]
     sol = opti.solve() [hidden]
 
     print(sol.value(obj,[y==2]))
@@ -449,8 +478,11 @@ Note that such statement does not modify the actual optimal value of ``y`` in a 
 
     opti.minimize(obj);
 
-    opti.solver('ipopt'); [hidden]
-    sol = opti.solve() [hidden]
+    options = struct('print_time',false); [hidden]
+    ipopt_options = struct('print_level',1); [hidden]
+
+    opti.solver('ipopt',options,ipopt_options); [hidden]
+    sol = opti.solve(); [hidden]
 
     sol.value(obj,{y==2})
 
@@ -468,7 +500,7 @@ A related usage pattern is to evaluate an expression at the initial guess:
     opti.subject_to( x**2+y**2==1 ) [hidden]
     opti.subject_to(       x+y>=1 ) [hidden]
 
-    opti.solver("ipopt") [hidden]
+    opti.solver("ipopt",dict(print_time=False),dict(print_level=False)) [hidden]
     sol = opti.solve() [hidden]
 
     print(sol.value(x**2+y,opti.initial()))
@@ -484,8 +516,11 @@ A related usage pattern is to evaluate an expression at the initial guess:
     opti.subject_to( x^2+y^2==1 ); [hidden]
     opti.subject_to(     x+y>=1 ); [hidden]
 
-    opti.solver('ipopt'); [hidden]
-    sol = opti.solve() [hidden]
+    options = struct('print_time',false); [hidden]
+    ipopt_options = struct('print_level',1); [hidden]
+
+    opti.solver('ipopt',options,ipopt_options); [hidden]
+    sol = opti.solve(); [hidden]
 
     sol.value(x**2+y,opti.initial())
 
@@ -496,6 +531,7 @@ In order to obtain dual variables (Lagrange multipliers) of constraints, make su
 
 
 .. exec-block:: python
+    :hide-output:
 
     opti = casadi.Opti() [hidden]
 
@@ -504,7 +540,7 @@ In order to obtain dual variables (Lagrange multipliers) of constraints, make su
 
     opti.minimize(  (y-x**2)**2   ) [hidden]
 
-    opti.solver("ipopt") [hidden]
+    opti.solver("ipopt",dict(print_time=False),dict(print_level=False)) [hidden]
 
     con = sin(x+y)>=1
     opti.subject_to(con)
@@ -513,6 +549,7 @@ In order to obtain dual variables (Lagrange multipliers) of constraints, make su
     print(sol.value(opti.dual(con)))
 
 .. exec-block:: octave
+    :hide-output:
 
     opti = casadi.Opti(); [hidden]
 
@@ -521,13 +558,15 @@ In order to obtain dual variables (Lagrange multipliers) of constraints, make su
 
     opti.minimize(  (y-x^2)^2   ); [hidden]
 
+    options = struct('print_time',false); [hidden]
+    ipopt_options = struct('print_level',1); [hidden]
 
-    opti.solver('ipopt'); [hidden]
-    sol = opti.solve() [hidden]
+    opti.solver('ipopt',options,ipopt_options); [hidden]
+    sol = opti.solve(); [hidden]
 
-    con = sin(x+y)>=1
-    opti.subject_to(con)
-    sol = opti.solve()
+    con = sin(x+y)>=1;
+    opti.subject_to(con);
+    sol = opti.solve();
 
     sol.value(opti.dual(con))
 

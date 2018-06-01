@@ -31,6 +31,7 @@ Generated C code can be as simple as calling the ``generate`` member function fo
               [x,sin(y)*x],\
               ['x','y'],['r','q'])
         f.generate('gen.c')
+        print(open('gen.c','r').read())
     &&
 
     .. exec-block:: octave
@@ -41,6 +42,7 @@ Generated C code can be as simple as calling the ``generate`` member function fo
               {x,sin(y)*x},...
               {'x','y'},{'r','q'});
         f.generate('gen.c');
+        type('gen.c')
 
 This will create a C file ``gen.c`` containing the function ``f`` and all its dependencies and required helper functions.
 We will return to how this file can be used in :numref:`sec-codegen_syntax` and the structure of the generated code is
@@ -168,7 +170,7 @@ described in the previous section, we can then create a |Function|
         x = MX.sym('x'); [hidden]
         f = Function('f',{x},{sin(x)}); [hidden]
         f.generate('gen.c'); [hidden]
-        system('gcc -fPIC -shared gen.c -o gen.so') [hidden]
+        system('gcc -fPIC -shared gen.c -o gen.so'); [hidden]
         f = external('f', './gen.so');
         disp(f(3.14))
 
@@ -184,7 +186,8 @@ which invokes the system compiler via the command line:
         x = MX.sym('x') [hidden]
         f = Function('f',[x],[sin(x)]) [hidden]
         C = Importer('gen.c','clang')
-        f = external('f',C);
+        f = external('f',C)
+        print(f(3.14))
     &&
 
     .. exec-block:: octave
@@ -213,7 +216,9 @@ followed by the function inputs:
     f = Function('f',{x},{sin(x)}); [hidden]
     f.generate('gen.c',struct('mex',true)); [hidden]
 
-    mex gen.c -largeArrayDims
+    %mex gen.c -largeArrayDims  % Matlab
+    mex gen.c -DMATLAB_MEX_FILE % Octave
+
     disp(gen('f', 3.14))
 
 Note that the result of the execution is always a MATLAB sparse matrix by default. Compiler flags ``-DCASASI_MEX_ALWAYS_DENSE`` and ``-DCASASI_MEX_ALLOW_DENSE`` may be set to influence this behaviour.

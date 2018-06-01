@@ -1,4 +1,0 @@
-Traceback (most recent call last):
-  File "154aa5c5ea738549e43d8ed6f97f48587d7beb04061c48d4fb00700d9bb7c186.python.in", line 1, in <module>
-    x = SX.sym('x'); y = SX.sym('y')
-NameError: name 'SX' is not defined

@@ -1,4 +1,0 @@
-  File "e3e72e10a69c1059079d51437b44cf61141a41022ca1b8d05fb0a0e2cb1913b1.python.in", line 3
-    g0 = (an expression of x, z)
-                      ^
-SyntaxError: invalid syntax

@@ -1,4 +1,0 @@
-Traceback (most recent call last):
-  File "8b3c052359f9dbe2e885cc748634d3263ed81e17899e2e2aa91fff9564d5ded8.python.in", line 4, in <module>
-    ocp.make_explicit()
-NameError: name 'ocp' is not defined

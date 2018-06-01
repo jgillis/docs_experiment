@@ -345,13 +345,17 @@ The getting and setting matrix elements is elaborated in the following. The disc
     .. exec-block:: python
         
         M = diag(SX([3,4,5,6])) [hidden]
-        print(M[0,0], M[1,0], M[-1,-1])
+        print(M[0,0])
+        print(M[1,0])
+        print(M[-1,-1])
     &&
 
     .. exec-block:: octave
 
         M = diag(SX([3,4,5,6])); [hidden]
-        M(1,1), M(2,1), M(end,end)
+        disp(M(1,1))
+        disp(M(2,1))
+        disp(M(end,end))
 
 **Slice access** means setting multiple elements at once. This is significantly more efficient than setting the elements one at a time. You get or set a slice by providing a (*start*,*stop*,*step*) triple. In Python and MATLAB, |casadi| uses standard syntax:
 
@@ -387,7 +391,8 @@ In C++, |casadi|'s :class:`Slice` helper class can be used. For the example abov
 
         M = SX([3 7 8 9; 4 5 6 1]);
         disp(M)
-        M(1,[1,4]), M([6,numel(M)-5])
+        disp(M(1,[1,4]))
+        disp(M([6,numel(M)-5]))
 
 
 
@@ -409,7 +414,7 @@ Arithmetic operations
 
         x = SX.sym('x');
         y = SX.sym('y',2,2);
-        sin(y)-x
+        disp(sin(y)-x)
 
 In C++ and Python (but not in MATLAB), the standard multiplication operation (using ``*``) is reserved for element-wise multiplication (in MATLAB ``.*``). For **matrix multiplication**, use ``A @ B`` or (``mtimes(A,B)`` in Python 3.4+):
 
@@ -423,7 +428,8 @@ In C++ and Python (but not in MATLAB), the standard multiplication operation (us
     .. exec-block:: octave
 
         y = SX.sym('y',2,2); [hidden]
-        y.*y, y*y
+        disp(y.*y)
+        disp(y*y)
 
 As is customary in MATLAB, multiplication using ``*`` and ``.*`` are equivalent when either of the arguments is a scalar.
 
@@ -434,13 +440,15 @@ As is customary in MATLAB, multiplication using ``*`` and ``.*`` are equivalent 
     .. exec-block:: python
                 
         y = SX.sym('y',2,2); [hidden]
+        print(y)
         print(y.T)
     &&
 
     .. exec-block:: octave
 
         y = SX.sym('y',2,2); [hidden]
-        y'
+        disp(y)
+        disp(y')
 
 **Reshaping** means changing the number of rows and columns but retaining the number of elements and the relative location of the nonzeros. This is a computationally very cheap operation which is performed using the syntax:
 
@@ -471,7 +479,7 @@ As is customary in MATLAB, multiplication using ``*`` and ``.*`` are equivalent 
 
         x = SX.sym('x',5);
         y = SX.sym('y',5);
-        [x;y]
+        disp([x;y])
 
 
 
@@ -487,7 +495,7 @@ As is customary in MATLAB, multiplication using ``*`` and ``.*`` are equivalent 
 
         x = SX.sym('x',5); [hidden]
         y = SX.sym('y',5); [hidden]
-        [x,y]
+        disp([x,y])
 
 There are also variants of these functions that take a list (in Python) or a cell array (in Matlab) as inputs:
 
@@ -506,7 +514,7 @@ There are also variants of these functions that take a list (in Python) or a cel
         x = SX.sym('x',5); [hidden]
         y = SX.sym('y',5); [hidden]
         L = {x,y};
-        hcat(L) % equivalent to [L{:}]
+        disp([L{:}])
 
 **Horizontal and vertical split** are the inverse operations of the above introduced horizontal and vertical concatenation. To split up an expression horizontally into :math:`n` smaller expressions, you need to provide, in addition to the expression being split, a vector *offset* of length :math:`n+1`. The first element of the *offset* vector must be 0 and the last element must be the number of columns. Remaining elements must follow in a non-decreasing order. The output :math:`i` of the split operation then contains the columns :math:`c` with :math:`\textit{offset}[i] \le c < \textit{offset}[i+1]`. The following demonstrates the syntax:
 
@@ -520,9 +528,9 @@ There are also variants of these functions that take a list (in Python) or a cel
 
     .. exec-block:: octave
 
-        x = SX.sym('x',5,2)
-        w = horzsplit(x,[0,1,2])
-        print(w[0], w[1])
+        x = SX.sym('x',5,2);
+        w = horzsplit(x,[0,1,2]);
+        disp(w(1)), disp(w(2))
 
 The vertsplit operation works analogously, but with the *offset* vector referring to rows:
 
@@ -538,7 +546,7 @@ The vertsplit operation works analogously, but with the *offset* vector referrin
 
         x = SX.sym('x',5,2); [hidden]
         w = vertsplit(x,[0,3,5]);
-        w{1}, w{2}
+        disp(w{1}), disp(w{2})
 
 Note that it is always possible to use slice element access instead of horizontal and vertical split, for the above vertical split:
 
@@ -554,7 +562,7 @@ Note that it is always possible to use slice element access instead of horizonta
 
         x = SX.sym('x',5,2); [hidden]
         w = {x(1:3,:), x(4:5,:)};
-        w{1}, w{2}
+        disp(w{1}), disp(w{2})
 
 For |SX| graphs, this alternative way is completely equivalent, but for |MX| graphs using ``horzsplit``/``vertsplit`` is *significantly more efficient when all the split expressions are needed*.
 
@@ -569,8 +577,8 @@ For |SX| graphs, this alternative way is completely equivalent, but for |MX| gra
 
     .. exec-block:: octave
 
-        x = SX.sym('x',2,2)
-        dot(x,x)
+        x = SX.sym('x',2,2);
+        disp(dot(x,x))
 
 Many of the above operations are also defined for the |Sparsity| class (:numref:`sec-sparsity_class`), e.g. ``vertcat``, ``horzsplit``, transposing, addition (which returns the *union* of two sparsity patterns) and multiplication (which returns the *intersection* of two sparsity patterns).
 
@@ -630,7 +638,7 @@ Linear algebra
 
         A = MX.sym('A',3,3);
         b = MX.sym('b',3);
-        A\b
+        disp(A\b)
 
 
 
@@ -761,5 +769,5 @@ The ``jtimes`` function optionally calculates the transposed-Jacobian-times-vect
         A = [1 3;4 7;2 8]; [hidden]
         x = SX.sym('x',2); [hidden]
         w = SX.sym('w',3);
-        f = A*x
+        f = A*x;
         jtimes(f,x,w,true)

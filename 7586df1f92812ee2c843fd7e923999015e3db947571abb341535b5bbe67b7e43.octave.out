@@ -1,8 +1,0 @@
-jit_tmp.c:68:15: error: expected expression
-  r[0] = x[0];\nwhile (r[0]<s[0]) {\n r[0] *= r[0];\n}\ncasadi_copy(r, 1, *res++);
-              ^
-1 error generated.
-error: casadiMEX: Error in Function::jit for 'f' [JitFunction] at .../casadi/core/function.cpp:255:
-.../casadi/core/function_internal.cpp:132: Error calling JitFunction::finalize for 'f':
-.../casadi/interfaces/clang/clang_compiler.cpp:215: Cannot execute action
-error: execution exception in 7586df1f92812ee2c843fd7e923999015e3db947571abb341535b5bbe67b7e43.octave.in

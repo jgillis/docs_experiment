@@ -1,4 +1,0 @@
-Traceback (most recent call last):
-  File "ea2b2924a73da0985af58b6b58e45ff6ca54493358517f720d359ef9d0986806.python.in", line 13, in <module>
-    f = mtimes(A,x)
-NameError: name 'A' is not defined
