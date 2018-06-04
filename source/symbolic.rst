@@ -356,7 +356,7 @@ The getting and setting matrix elements is elaborated in the following. The disc
         disp(M(2,1))
         disp(M(end,end))
 
-**Slice access** means setting multiple elements at once. This is significantly more efficient than setting the elements one at a time. You get or set a slice by providing a (*start*,*stop*,*step*) triple. In Python and MATLAB, |casadi| uses standard syntax:
+**Slice access** means setting multiple elements at once. This is significantly more efficient than setting the elements one at a time. You get or set a slice by providing a (*start* , *stop* , *step*) triple. In Python and MATLAB, |casadi| uses standard syntax:
 
 
 .. side-by-side::
