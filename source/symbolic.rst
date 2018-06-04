@@ -162,8 +162,7 @@ The commands above would be equivalent to:
         C_sparse = sparse(C);
 
 
-TODO
-More usage examples for |SX| can be found in the tutorials at http://docs.casadi.org/. For documentation of particular functions of this class (and others), find the "C++ API docs" on the website and search for information about ``casadi::Matrix``.
+More usage examples for |SX| can be found in the example pack at http://install.casadi.org/. For documentation of particular functions of this class (and others), find the "C++ API" on http://docs.casadi.org/ and search for information about ``casadi::Matrix``.
 
 The |MX| symbolics
 ------------------
@@ -581,8 +580,6 @@ For |SX| graphs, this alternative way is completely equivalent, but for |MX| gra
         disp(dot(x,x))
 
 Many of the above operations are also defined for the |Sparsity| class (:numref:`sec-sparsity_class`), e.g. ``vertcat``, ``horzsplit``, transposing, addition (which returns the *union* of two sparsity patterns) and multiplication (which returns the *intersection* of two sparsity patterns).
-
-TODO link to API
 
 Querying properties
 -------------------

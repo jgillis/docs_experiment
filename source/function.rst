@@ -436,9 +436,6 @@ function ``S``:
         disp(x_opt)
 
 
-TODO make tiny
-
-
 .. _sec-qpsol:
 
 Quadratic programming
@@ -548,7 +545,7 @@ The low-level interface, on the other hand, solves QPs of the following form:
     \end{array}
 
 
-Encoding problem :eq`simple_qp` in this form, omitting bounds that are infinite, is straightforward:
+Encoding problem :eq:`simple_qp` in this form, omitting bounds that are infinite, is straightforward:
 
 
 .. side-by-side::
@@ -809,9 +806,6 @@ The ``fold``/``mapaccum`` operation supports primitive functions :math:`f` with 
 The first input and output are used for accumulating, while the remainder inputs are read column-wise over the iterations.
 
 The ``map``/``mapaccum`` operation exhibits a graph size and initialization time that scales logarithmically with :math:`n`.
-
-
-TODO remove empty lines in front of code
 
 .. rubric:: Footnotes
 

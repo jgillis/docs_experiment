@@ -60,10 +60,7 @@ The derived class consists of the following parts:
 * A function for numerical evaluation.
 * Optional functions for derivatives. You can choose to supply a full Jacobian (``has_jacobian``, ``get_jacobian``), or choose to supply forward/reverse sensitivities (``has_forward``, ``get_forward``,  ``has_reverse``, ``get_reverse``).
 
-For a complete list of functions, see the C++ API documentation for
-|Callback|.
-
-TODO link
+For a complete list of functions, see the C++ API documentation for |Callback|.
 
 The usage from the different languages are described in the following.
 

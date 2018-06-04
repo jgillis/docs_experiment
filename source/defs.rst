@@ -1,4 +1,4 @@
-.. |casadi| replace:: ``CasADi``
+.. |casadi| replace:: CasADi
 .. |SX| replace:: :class:`SX`
 .. |DM| replace:: :class:`DM`
 .. |MX| replace:: :class:`MX`
@@ -7,7 +7,6 @@
 .. |Sparsity| replace:: :class:`Sparsity`
 .. |Callback| replace:: :class:`Callback`
 .. |DaeBuilder| replace:: :class:`DaeBuilder`
-
 
 .. exec-block-add-header:: python
 
