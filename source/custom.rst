@@ -467,7 +467,7 @@ In MATLAB/Octave, the corresponding code reads:
 Note in particular that the ``grid`` and ``values`` arguments to ``interpolant`` must be numerical in nature.
 
 2D lookup tables
-----------------
+^^^^^^^^^^^^^^^^
 
 In two dimensions, we get the following in Python, also compared to SciPy for reference:
 
